@@ -2,7 +2,7 @@
 
 글을 쓰고 공유하는 개인 블로그입니다.
 
-🔗 https://blog-lac-mu-37.vercel.app
+🔗 https://jeongho.me
 
 ## 기술 스택
 
