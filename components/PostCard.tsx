@@ -6,13 +6,15 @@ export function PostCard({ post }: { post: PostMeta }) {
   return (
     <article className="group flex flex-col gap-2 border-b border-zinc-100 py-6 last:border-0 dark:border-zinc-800">
       <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500">
-        <time dateTime={post.date}>
-          {new Date(post.date).toLocaleDateString("ko-KR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </time>
+        {post.date && (
+          <time dateTime={post.date}>
+            {new Date(post.date).toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </time>
+        )}
         <span>·</span>
         <span>{post.readingTime}</span>
       </div>

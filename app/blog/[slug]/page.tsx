@@ -35,14 +35,18 @@ export default async function PostPage({ params }: Props) {
     <div className="mx-auto max-w-3xl px-4 py-12">
       <header className="mb-8">
         <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 mb-3">
-          <time dateTime={post.date}>
-            {new Date(post.date).toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
-          <span>·</span>
+          {post.date && (
+            <>
+              <time dateTime={post.date}>
+                {new Date(post.date).toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+              <span>·</span>
+            </>
+          )}
           <span>{post.readingTime}</span>
         </div>
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
