@@ -23,9 +23,11 @@ export function PostCard({ post }: { post: PostMeta }) {
           {post.title}
         </h2>
       </Link>
-      <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-        {post.description}
-      </p>
+      {post.description && (
+        <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+          {post.description}
+        </p>
+      )}
       {post.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-1">
           {post.tags.map((tag) => (

@@ -6,6 +6,20 @@ import type { Post, PostMeta } from "./types"
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts")
 
+function extractExcerpt(content: string, maxLength = 150): string {
+  const plain = content
+    .replace(/!\[.*?\]\(.*?\)/g, "")
+    .replace(/\[(.+?)\]\(.+?\)/g, "$1")
+    .replace(/#{1,6}\s+/g, "")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`{1,3}[^`]*`{1,3}/g, "")
+    .replace(/>\s+/g, "")
+    .replace(/\n+/g, " ")
+    .trim()
+  return plain.length <= maxLength ? plain : plain.slice(0, maxLength).trimEnd() + "..."
+}
+
 export function getAllPosts(): PostMeta[] {
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx") || f.endsWith(".md"))
 
@@ -20,7 +34,7 @@ export function getAllPosts(): PostMeta[] {
         slug,
         title: (data.title as string) ?? slug,
         date: (data.date as string) ?? "",
-        description: (data.description as string) ?? "",
+        description: extractExcerpt(content),
         tags: (data.tags as string[]) ?? [],
         readingTime: rt.text,
       }
@@ -43,7 +57,7 @@ export function getPostBySlug(slug: string): Post | null {
     slug: decodedSlug,
     title: (data.title as string) ?? decodedSlug,
     date: (data.date as string) ?? "",
-    description: (data.description as string) ?? "",
+    description: extractExcerpt(content),
     tags: (data.tags as string[]) ?? [],
     readingTime: rt.text,
     content,
