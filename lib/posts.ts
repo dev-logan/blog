@@ -6,6 +6,13 @@ import type { Post, PostMeta } from "./types"
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts")
 
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARS = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g
+
+function sanitize(raw: string): string {
+  return raw.replace(CONTROL_CHARS, "")
+}
+
 function extractExcerpt(content: string, maxLength = 150): string {
   const plain = content
     .replace(/!\[.*?\]\(.*?\)/g, "")
@@ -26,7 +33,7 @@ export function getAllPosts(): PostMeta[] {
   return files
     .map((file) => {
       const slug = file.replace(/\.mdx?$/, "")
-      const raw = fs.readFileSync(path.join(POSTS_DIR, file), "utf-8")
+      const raw = sanitize(fs.readFileSync(path.join(POSTS_DIR, file), "utf-8"))
       const { data, content } = matter(raw)
       const rt = readingTime(content)
 
@@ -49,7 +56,7 @@ export function getPostBySlug(slug: string): Post | null {
   if (!matched) return null
   const filePath = path.join(POSTS_DIR, matched)
 
-  const raw = fs.readFileSync(filePath, "utf-8")
+  const raw = sanitize(fs.readFileSync(filePath, "utf-8"))
   const { data, content } = matter(raw)
   const rt = readingTime(content)
 
