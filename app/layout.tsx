@@ -5,6 +5,7 @@ import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { getSiteConfig } from "@/lib/config"
 import { DevToolbar } from "@/components/DevToolbar"
+import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -18,11 +19,14 @@ const geistMono = Geist_Mono({
 })
 
 const siteConfig = getSiteConfig()
+const siteName = process.env.NODE_ENV === "development"
+  ? `${siteConfig.name}(개발 중)`
+  : siteConfig.name
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    default: siteName,
+    template: `%s | ${siteName}`,
   },
   description: siteConfig.description,
 }
@@ -44,6 +48,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           {process.env.NODE_ENV === "development" && <DevToolbar />}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
