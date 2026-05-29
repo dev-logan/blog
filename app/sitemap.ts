@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next"
 import { getAllPosts, getAllTags } from "@/lib/posts"
+import { getBaseUrl } from "@/lib/config"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000"
+  const baseUrl = getBaseUrl()
 
   const posts = getAllPosts()
   const tags = getAllTags()

@@ -1,9 +1,8 @@
 import type { MetadataRoute } from "next"
+import { getBaseUrl } from "@/lib/config"
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000"
+  const baseUrl = getBaseUrl()
 
   return {
     rules: { userAgent: "*", allow: "/" },

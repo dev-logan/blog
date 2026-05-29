@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
-import { getSiteConfig } from "@/lib/config"
+import { getSiteConfig, getBaseUrl } from "@/lib/config"
 import { DevToolbar } from "@/components/DevToolbar"
 import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
@@ -24,11 +24,29 @@ const siteName = process.env.NODE_ENV === "development"
   : siteConfig.name
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getBaseUrl()),
   title: {
     default: siteName,
     template: `%s | ${siteName}`,
   },
   description: siteConfig.description,
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    locale: "ko_KR",
+    title: siteName,
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description: siteConfig.description,
+  },
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
 }
 
 export default function RootLayout({

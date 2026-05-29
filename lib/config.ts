@@ -23,3 +23,9 @@ function loadSiteConfig(): SiteConfig {
 export function getSiteConfig(): SiteConfig {
   return loadSiteConfig()
 }
+
+export function getBaseUrl(): string {
+  return process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000"
+}
