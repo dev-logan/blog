@@ -8,6 +8,8 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // 마운트 후에만 테마 아이콘을 렌더해 hydration 불일치를 방지 (next-themes 권장 패턴)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 
