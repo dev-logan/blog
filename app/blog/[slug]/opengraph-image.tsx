@@ -15,7 +15,7 @@ export function generateStaticParams() {
 
 export default async function Image({ params }: Props) {
   const { slug } = await params
-  const post = getPostBySlug(decodeURIComponent(slug))
+  const post = getPostBySlug(slug)
   const siteConfig = getSiteConfig()
 
   return new ImageResponse(
