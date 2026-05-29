@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { getSiteConfig, getBaseUrl } from "@/lib/config"
-import { DevToolbar } from "@/components/DevToolbar"
 import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
 
@@ -65,7 +64,6 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
-          {process.env.NODE_ENV === "development" && <DevToolbar />}
           <Analytics />
         </ThemeProvider>
       </body>
