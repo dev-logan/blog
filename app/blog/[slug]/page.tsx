@@ -2,9 +2,22 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypePrettyCode from "rehype-pretty-code"
-import { getAllPosts, getPostBySlug } from "@/lib/posts"
+import rehypeSlug from "rehype-slug"
+import {
+  getAllPosts,
+  getPostBySlug,
+  getAdjacentPosts,
+  getRelatedPosts,
+} from "@/lib/posts"
+import { extractToc } from "@/lib/toc"
 import { TagBadge } from "@/components/TagBadge"
 import { Comments } from "@/components/Comments"
+import { TableOfContents } from "@/components/TableOfContents"
+import { ReadingProgress } from "@/components/ReadingProgress"
+import { BackToTop } from "@/components/BackToTop"
+import { PostNav } from "@/components/PostNav"
+import { RelatedPosts } from "@/components/RelatedPosts"
+import { Pre } from "@/components/mdx/Pre"
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -43,56 +56,70 @@ export default async function PostPage({ params }: Props) {
 
   if (!post) notFound()
 
+  const toc = extractToc(post.content)
+  const { prev, next } = getAdjacentPosts(post.slug)
+  const related = getRelatedPosts(post.slug)
+
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <header className="mb-8">
-        <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 mb-3">
-          {post.date && (
-            <>
-              <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
-              <span>·</span>
-            </>
-          )}
-          <span>{post.readingTime}</span>
-        </div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
-          {post.title}
-        </h1>
-        {post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-4">
-            {post.tags.map((tag) => (
-              <TagBadge key={tag} tag={tag} />
-            ))}
+    <>
+      <ReadingProgress />
+      <div className="relative mx-auto max-w-3xl px-4 py-12">
+        <TableOfContents items={toc} />
+        <header className="mb-8">
+          <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500 mb-3">
+            {post.date && (
+              <>
+                <time dateTime={post.date}>
+                  {new Date(post.date).toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <span>·</span>
+              </>
+            )}
+            <span>{post.readingTime}</span>
           </div>
-        )}
-      </header>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+            {post.title}
+          </h1>
+          {post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-4">
+              {post.tags.map((tag) => (
+                <TagBadge key={tag} tag={tag} />
+              ))}
+            </div>
+          )}
+        </header>
 
-      <article className="prose prose-zinc dark:prose-invert max-w-none">
-        <MDXRemote
-          source={post.content}
-          options={{
-            mdxOptions: {
-              rehypePlugins: [
-                [
-                  rehypePrettyCode,
-                  {
-                    theme: { dark: "github-dark", light: "github-light" },
-                    keepBackground: false,
-                  },
+        <article className="prose prose-zinc dark:prose-invert max-w-none">
+          <MDXRemote
+            source={post.content}
+            components={{ pre: Pre }}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [
+                  rehypeSlug,
+                  [
+                    rehypePrettyCode,
+                    {
+                      theme: { dark: "github-dark", light: "github-light" },
+                      keepBackground: false,
+                    },
+                  ],
                 ],
-              ],
-            },
-          }}
-        />
-      </article>
+              },
+            }}
+          />
+        </article>
 
-      <Comments />
-    </div>
+        <PostNav prev={prev} next={next} />
+        <RelatedPosts posts={related} />
+
+        <Comments />
+      </div>
+      <BackToTop />
+    </>
   )
 }

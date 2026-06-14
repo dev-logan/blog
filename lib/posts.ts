@@ -94,3 +94,38 @@ export function getAllTags(): { tag: string; count: number }[] {
 export function getPostsByTag(tag: string): PostMeta[] {
   return getAllPosts().filter((p) => p.tags.includes(tag))
 }
+
+// 날짜 desc 정렬 기준 이웃 글. prev = 더 오래된 글, next = 더 최신 글.
+export function getAdjacentPosts(slug: string): {
+  prev: PostMeta | null
+  next: PostMeta | null
+} {
+  const decoded = decodeURIComponent(slug)
+  const posts = getAllPosts()
+  const i = posts.findIndex((p) => p.slug === decoded)
+  if (i === -1) return { prev: null, next: null }
+  return {
+    prev: posts[i + 1] ?? null,
+    next: posts[i - 1] ?? null,
+  }
+}
+
+// 태그 겹침 수로 점수를 매겨 관련 글을 추천한다. 자기 자신 제외, 상위 limit개.
+export function getRelatedPosts(slug: string, limit = 3): PostMeta[] {
+  const decoded = decodeURIComponent(slug)
+  const posts = getAllPosts()
+  const current = posts.find((p) => p.slug === decoded)
+  if (!current) return []
+
+  const currentTags = new Set(current.tags)
+  return posts
+    .filter((p) => p.slug !== decoded)
+    .map((p) => ({
+      post: p,
+      score: p.tags.filter((t) => currentTags.has(t)).length,
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || (a.post.date < b.post.date ? 1 : -1))
+    .slice(0, limit)
+    .map((x) => x.post)
+}

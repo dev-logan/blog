@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ThemeToggle } from "./ThemeToggle"
+import { NavLink } from "./NavLink"
 import { getSiteConfig } from "@/lib/config"
 
 export function Header() {
@@ -14,17 +15,29 @@ export function Header() {
           {siteConfig.name}
         </Link>
         <nav className="flex items-center gap-4">
+          <NavLink href="/blog">블로그</NavLink>
+          <NavLink href="/tags">태그</NavLink>
+          <NavLink href="/about">소개</NavLink>
           <Link
-            href="/blog"
-            className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+            href="/search"
+            aria-label="검색"
+            className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
-            블로그
-          </Link>
-          <Link
-            href="/tags"
-            className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
-          >
-            태그
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
           </Link>
           <ThemeToggle />
         </nav>

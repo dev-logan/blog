@@ -3,7 +3,107 @@
 
 @variant dark (&:where(.dark, .dark *));
 
-:root {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme inline {
+  --font-sans: var(--font-pretendard), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* 한글 가독성을 위한 본문 기본값 */
+body {
+  font-family: var(--font-sans);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 스티키 헤더에 가려지지 않게 앵커 오프셋 */
+:where(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* prose 타이포그래피 다듬기 (모노톤 유지) */
+.prose {
+  --tw-prose-body: var(--color-zinc-700);
+  line-height: 1.8;
+}
+.dark .prose {
+  --tw-prose-body: var(--color-zinc-300);
+}
+.prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"] *)) {
+  letter-spacing: -0.01em;
+  scroll-margin-top: 5rem;
+}
+.prose :where(p, li):not(:where([class~="not-prose"] *)) {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+/* 인라인 코드: prose 기본 backtick 제거하고 옅은 배경 */
+.prose :where(code):not(:where([class~="not-prose"] *, pre code)) {
+  font-weight: 500;
+  background: var(--color-zinc-100);
+  padding: 0.15em 0.4em;
+  border-radius: 0.3rem;
+}
+.dark .prose :where(code):not(:where([class~="not-prose"] *, pre code)) {
+  background: var(--color-zinc-800);
+}
+.prose :where(code):not(:where([class~="not-prose"] *))::before,
+.prose :where(code):not(:where([class~="not-prose"] *))::after {
+  content: none;
+}
+
+/* rehype-pretty-code 코드블록 (keepBackground:false 이므로 직접 스타일) */
+.prose figure[data-rehype-pretty-code-figure] {
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-zinc-200);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: var(--color-zinc-50);
+}
+.dark .prose figure[data-rehype-pretty-code-figure] {
+  border-color: var(--color-zinc-800);
+  background: var(--color-zinc-900);
+}
+/* 파일명 헤더 바 */
+.prose [data-rehype-pretty-code-title] {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  color: var(--color-zinc-500);
+  border-bottom: 1px solid var(--color-zinc-200);
+  background: var(--color-zinc-100);
+}
+.dark .prose [data-rehype-pretty-code-title] {
+  color: var(--color-zinc-400);
+  border-bottom-color: var(--color-zinc-800);
+  background: var(--color-zinc-800);
+}
+.prose figure[data-rehype-pretty-code-figure] pre {
+  margin: 0;
+  padding: 1rem 0;
+  background: transparent;
+  border-radius: 0;
+  overflow-x: auto;
+  position: relative;
+}
+.prose figure[data-rehype-pretty-code-figure] pre > code {
+  display: grid; /* 줄 단위 그리드 → 줄 강조/번호 지원 */
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.prose [data-line] {
+  padding: 0 1rem;
+  border-left: 2px solid transparent;
+}
+.prose [data-highlighted-line] {
+  background: var(--color-zinc-200);
+  border-left-color: var(--color-zinc-400);
+}
+.dark .prose [data-highlighted-line] {
+  background: rgb(255 255 255 / 0.06);
+  border-left-color: var(--color-zinc-600);
+}
+/* 언어 라벨 (파일명 없을 때 우상단) */
+.prose figure[data-rehype-pretty-code-figure]:not(:has([data-rehype-pretty-code-title])) {
+  position: relative;
 }
