@@ -28,6 +28,7 @@
 .obsidian/
 
 # local AI/recommendation tooling
+/AGENTS.md
 /CLAUDE.md
 /docs/blog-topic-recommender.md
 /scripts/recommend-next-post.mjs
