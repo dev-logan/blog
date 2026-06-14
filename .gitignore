@@ -27,6 +27,11 @@
 # obsidian
 .obsidian/
 
+# local AI/recommendation tooling
+/CLAUDE.md
+/docs/blog-topic-recommender.md
+/scripts/recommend-next-post.mjs
+
 # debug
 npm-debug.log*
 yarn-debug.log*
